@@ -1,0 +1,7 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+# La cadena de conexión NO se sube al repositorio
+**/appsettings.Development.json

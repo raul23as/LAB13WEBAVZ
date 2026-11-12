@@ -1,0 +1,77 @@
+@host = http://localhost:5047
+
+### ===================== DUEÑOS =====================
+
+### 200 - Listar dueños
+GET {{host}}/api/duenos
+
+### 200 - Obtener dueño por Id
+GET {{host}}/api/duenos/1
+
+### 404 - Dueño que no existe
+GET {{host}}/api/duenos/999
+
+### 200 - Ruta anidada: mascotas de un dueño
+GET {{host}}/api/duenos/1/mascotas
+
+### 201 - Crear dueño
+POST {{host}}/api/duenos
+Content-Type: application/json
+
+{ "nombres": "Elena Castillo Paz", "dni": "74567890", "telefono": "945612378", "correo": "elena.castillo@correo.com" }
+
+### 400 - Datos inválidos (DNI con letras, correo mal escrito)
+POST {{host}}/api/duenos
+Content-Type: application/json
+
+{ "nombres": "X", "dni": "12AB", "correo": "correo-malo" }
+
+### 409 - Regla: DNI repetido
+POST {{host}}/api/duenos
+Content-Type: application/json
+
+{ "nombres": "Otra Persona", "dni": "70123456" }
+
+### 204 - Actualizar dueño
+PUT {{host}}/api/duenos/3
+Content-Type: application/json
+
+{ "nombres": "Carla Mendoza Ríos", "dni": "72345678", "telefono": "998877665", "correo": "carla.mendoza@correo.com" }
+
+### 409 - Regla: no se puede eliminar un dueño con mascotas
+DELETE {{host}}/api/duenos/1
+
+### 204 - Eliminar dueño sin mascotas (Diego, Id 4)
+DELETE {{host}}/api/duenos/4
+
+### ===================== MASCOTAS =====================
+
+### 200 - Listar con filtros por query string
+GET {{host}}/api/mascotas?especie=Perro
+
+### 200 - Obtener mascota por Id
+GET {{host}}/api/mascotas/1
+
+### 404 - Mascota que no existe
+GET {{host}}/api/mascotas/999
+
+### 201 - Crear mascota
+POST {{host}}/api/mascotas
+Content-Type: application/json
+
+{ "nombre": "Bobby", "especie": "Perro", "raza": "Beagle", "fechaNacimiento": "2024-04-10", "peso": 12.5, "duenoId": 2 }
+
+### 409 - Regla: el dueño 1 ya tiene 5 mascotas
+POST {{host}}/api/mascotas
+Content-Type: application/json
+
+{ "nombre": "Sexta", "especie": "Gato", "fechaNacimiento": "2024-01-01", "peso": 3, "duenoId": 1 }
+
+### 204 - Actualizar mascota
+PUT {{host}}/api/mascotas/8
+Content-Type: application/json
+
+{ "nombre": "Toby", "especie": "Conejo", "raza": "Cabeza de León", "fechaNacimiento": "2022-08-25", "peso": 2.1, "duenoId": 3 }
+
+### 204 - Eliminar mascota
+DELETE {{host}}/api/mascotas/7
