@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Veterinaria.Entidades;
 using Veterinaria.Entidades.DTOs;
 using Veterinaria.Negocio.Excepciones;
 using Veterinaria.Negocio.Servicios;
@@ -7,6 +9,7 @@ namespace Veterinaria.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]   // todos los endpoints exigen token
 public class MascotasController : ControllerBase
 {
     private readonly IMascotaServicio _mascotas;
@@ -38,8 +41,9 @@ public class MascotasController : ControllerBase
         return Ok(mascota);
     }
 
-    // POST: api/mascotas
+    // POST: api/mascotas   (Recepcionista o Veterinario)
     [HttpPost]
+    [Authorize(Roles = RolesVeterinaria.Todos)]
     [ProducesResponseType(typeof(MascotaDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -61,8 +65,9 @@ public class MascotasController : ControllerBase
         }
     }
 
-    // PUT: api/mascotas/5
+    // PUT: api/mascotas/5   (solo Veterinario)
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RolesVeterinaria.Veterinario)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -87,8 +92,9 @@ public class MascotasController : ControllerBase
         }
     }
 
-    // DELETE: api/mascotas/5
+    // DELETE: api/mascotas/5   (solo Recepcionista)
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RolesVeterinaria.Recepcionista)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Eliminar(int id)

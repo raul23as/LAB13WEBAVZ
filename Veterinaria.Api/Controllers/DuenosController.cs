@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Veterinaria.Entidades;
 using Veterinaria.Entidades.DTOs;
 using Veterinaria.Negocio.Excepciones;
 using Veterinaria.Negocio.Servicios;
@@ -7,6 +9,7 @@ namespace Veterinaria.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]   // todos los endpoints exigen token, salvo los que indiquen otra cosa
 public class DuenosController : ControllerBase
 {
     private readonly IDuenoServicio _duenos;
@@ -52,8 +55,9 @@ public class DuenosController : ControllerBase
         return Ok(mascotas);
     }
 
-    // POST: api/duenos
+    // POST: api/duenos   (solo Recepcionista)
     [HttpPost]
+    [Authorize(Roles = RolesVeterinaria.Recepcionista)]
     [ProducesResponseType(typeof(DuenoDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -70,8 +74,9 @@ public class DuenosController : ControllerBase
         }
     }
 
-    // PUT: api/duenos/5
+    // PUT: api/duenos/5   (solo Recepcionista)
     [HttpPut("{id:int}")]
+    [Authorize(Roles = RolesVeterinaria.Recepcionista)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -92,8 +97,9 @@ public class DuenosController : ControllerBase
         }
     }
 
-    // DELETE: api/duenos/5
+    // DELETE: api/duenos/5   (solo Recepcionista)
     [HttpDelete("{id:int}")]
+    [Authorize(Roles = RolesVeterinaria.Recepcionista)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
